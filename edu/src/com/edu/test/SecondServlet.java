@@ -50,8 +50,6 @@ public class SecondServlet extends HttpServlet {
 		out.print("<h1>" + name + "</h1>");
 		out.print("<h1>" + age + "</h1>");
 	
-		
-	
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
