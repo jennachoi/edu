@@ -12,26 +12,29 @@
 <%
 	//db 조회 후 가져온 member이름, 나이를출력
 	//없으면 해당 사용자 없음
-	
-	String id = request.getParameter("id");
-	String pwd = request.getParameter("pwd");
-	
-	MemberDAO dao = new MemberDAO();
-	Member mem = new Member();
-	mem = dao.checkInfo(id, pwd);
-	
-	String name = mem.getMemberName();
-	int age = mem.getMemberAge();
 
-	if ( name == null && age == 0 ) {
-		request.setAttribute("err", "사용자 없음");
-		RequestDispatcher rd = request.getRequestDispatcher("logInOut.jsp");
-		rd.forward(request, response);
-		return;
-	}
-	
 %>
-	<H3>이름: <%=name %></H3>
-	<H3>나이: <%=age %></H3>
+<%
+	//String 객체는 equals로 비교
+	if(request.getMethod().equals("POST")) { // POST 방식 -> 로그인
+		MemberDAO dao = new MemberDAO();
+		String id = request.getParameter("id");
+		String pwd = request.getParameter("pwd");
+		
+		Member mem = dao.checkInfo(id, pwd);
+
+		if ( mem == null || mem.getMemberId() == null ) {
+			out.print("사용자 없음");
+		} else { 
+			session.setAttribute("info", mem);
+			out.print("<h3>나이: " + mem.getMemberAge() + "</h3>");
+			out.print("<h3>이름: " + mem.getMemberName() + "</h3>");
+			}
+	}else { // GET 방식 -> 로그아웃
+		session.invalidate();
+		out.print("로그아웃 됨");
+		
+	}
+%>
 </body>
 </html>
